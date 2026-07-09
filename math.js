@@ -1,20 +1,9 @@
- const Sim = (() => {
+const Sim = (() => {
 
   const LIMITE_SEGURO = 0.02;
 
-  /**
-   * @param {Object} p 
-   * @param {number} p.v0  
-   * @param {number} p.a0   
-   * @param {number} p.rin  
-   * @param {number} p.rout 
-   * @param {number} p.l    
-   * @param {number} p.tEval
-   * @param {number} [p.dt=1] 
-   * @returns {Object} 
-   */
   function simulate({ v0, a0, rin, rout, l, tEval, dt = 1 }) {
-    const deltaR = rin - rout; 
+    const deltaR = rin - rout;               
     const diasTotales = Math.max(tEval, 50); 
 
     const labels = [];
