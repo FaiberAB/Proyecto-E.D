@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Ambiental: Remediación de Acuífero (Fracking)</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <svg id="grietas-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 150,900 L 150,650 Q 150,600 180,580 L 350,550" />
+        <path d="M 150,720 Q 110,680 90,620 T 60,550" />
+        <path d="M 110,680 Q 140,640 130,590" />
+        <path d="M 180,580 Q 200,520 250,490 T 300,450" />
+        <path d="M 220,505 Q 190,460 170,390" />
+        
+        <path d="M 500,950 L 500,700 Q 520,630 580,600 L 720,570" />
+        <path d="M 500,780 Q 450,740 420,680 T 390,590" />
+        <path d="M 440,710 Q 480,660 460,600" />
+        <path d="M 540,615 Q 570,530 630,490 T 680,420" />
+        
+        <path d="M 850,900 L 850,680 Q 820,620 760,590 L 600,560" />
+        <path d="M 850,750 Q 900,700 920,630 T 950,540" />
+        <path d="M 790,605 Q 750,510 770,440" />
+        <path d="M 680,576 Q 640,510 590,470" />
+    </svg>
+    
+    <div id="vignette-peligro"></div>
+
+    <header>
+        <div class="header-inner">
+            <div>
+                <h1 class="titulo"><i class="fa-solid fa-leaf"></i> Simulador Ambiental: Acuíferos</h1>
+                <p class="subtitulo">Modelo Dinámico con Volumen Variable y Fuga por Fracking</p>
+                <p class="autores"><i class="fa-solid fa-user-group"></i> Desarrollado por: <strong>Jan Vargas</strong> & <strong>Faiber Ariza</strong></p>
+            </div>
+            <div class="formula-box">
+                <p>dA/dt + [R_out / (V0 + ΔR·t)]·A = L</p>
+                <span class="tag">Ecuaciones Diferenciales</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="panel">
+            <h2><i class="fa-solid fa-sliders"></i> Parámetros Iniciales</h2>
+
+            <div class="campo">
+                <label><span>Volumen Inicial (m³)</span><span id="val-v0" class="valor">10000</span></label>
+                <input type="range" id="input-v0" min="5000" max="20000" step="500" value="10000">
+            </div>
+
+            <div class="campo">
+                <label><span>Tóxico Inicial (kg)</span><span id="val-a0" class="valor">500</span></label>
+                <input type="range" id="input-a0" min="0" max="2000" step="50" value="500">
+            </div>
+
+            <div class="campo">
+                <label><span>Agua Inyectada (m³/día)</span><span id="val-rin" class="valor">300</span></label>
+                <input type="range" id="input-rin" min="0" max="1000" step="50" value="300">
+            </div>
+
+            <div class="campo">
+                <label><span>Mezcla Extraída (m³/día)</span><span id="val-rout" class="valor">200</span></label>
+                <input type="range" id="input-rout" min="0" max="1000" step="50" value="200">
+            </div>
+
+            <div class="campo">
+                <label><span>Fuga Continua Tóxica (kg/día)</span><span id="val-l" class="valor">10</span></label>
+                <input type="range" id="input-l" min="0" max="100" step="1" value="10">
+            </div>
+
+            <div class="campo dias">
+                <label><span>Días a Evaluar (t)</span><span id="val-t" class="valor">30</span></label>
+                <input type="range" id="input-t" min="10" max="100" step="1" value="30">
+            </div>
+
+            <button id="btn-reset" class="btn-reset">Restaurar Problema Original</button>
+        </div>
+
+        <div>
+            <div class="resultados">
+                <div class="tarjeta" id="tarjeta-vol">
+                    <p class="label">Volumen Acuífero (Día <span class="lbl-dia">30</span>)</p>
+                    <h3 id="res-vol">-- m³</h3>
+                    <p id="res-vol-trend" class="nota">--</p>
+                </div>
+                <div class="tarjeta" id="tarjeta-tox">
+                    <p class="label">Masa Tóxico (Día <span class="lbl-dia">30</span>)</p>
+                    <h3 id="res-tox">-- kg</h3>
+                    <p class="nota">Cantidad absoluta en el agua</p>
+                </div>
+                <div class="tarjeta" id="tarjeta-conc">
+                    <p class="label">Concentración (Día <span class="lbl-dia">30</span>)</p>
+                    <h3 id="res-conc">-- kg/m³</h3>
+                    <p id="res-status" class="nota">--</p>
+                </div>
+            </div>
+
+            <div class="panel grafica-panel" style="margin-top: 1.5rem;">
+                <h2>Evolución de Concentración vs Límite Seguro</h2>
+                <div class="grafica-cont">
+                    <canvas id="simChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="math.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
