@@ -1,3 +1,7 @@
+Chart.defaults.color = '#000000';
+Chart.defaults.font.weight = 'bold';
+Chart.defaults.font.size = 13;
+
 let myChart = null;
 
 const $ = (id) => document.getElementById(id);
@@ -37,7 +41,7 @@ function actualizarTarjetas(res) {
     trendEl.style.color = '#f59e0b';
   } else {
     trendEl.innerHTML = `<i class="fa-solid fa-equals"></i> Volumen constante`;
-    trendEl.style.color = '#9ca3af';
+    trendEl.style.color = '#000000';
   }
 
   const tarjetaConc = $('tarjeta-conc');
@@ -46,7 +50,7 @@ function actualizarTarjetas(res) {
 
   tarjetaConc.classList.toggle('peligro', enPeligro);
   estado.innerText = enPeligro ? '⚠️ Peligro Ambiental' : '✅ Nivel Seguro';
-  estado.style.color = enPeligro ? '#ef4444' : '#4ade80';
+  estado.style.color = enPeligro ? '#ef4444' : '#15803d';
 
   return enPeligro;
 }
@@ -87,15 +91,15 @@ function dibujarGrafica(res) {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#ede4d6' } },
+        legend: { labels: { color: '#000000' } },
         tooltip: { backgroundColor: 'rgba(20,14,9,0.92)', titleColor: '#fff', bodyColor: '#fff' },
       },
       scales: {
-        x: { ticks: { color: '#b8ab98', maxTicksLimit: 10 }, grid: { color: 'rgba(120,100,80,0.15)' } },
+        x: { ticks: { color: '#000000', maxTicksLimit: 10 }, grid: { color: 'rgba(0,0,0,0.15)' } },
         y: {
-          ticks: { color: '#b8ab98' },
-          grid: { color: 'rgba(120,100,80,0.15)' },
-          title: { display: true, text: 'Concentración (kg/m³)', color: '#b8ab98' },
+          ticks: { color: '#000000' },
+          grid: { color: 'rgba(0,0,0,0.15)' },
+          title: { display: true, text: 'Concentración (kg/m³)', color: '#000000' },
         },
       },
     },
@@ -123,9 +127,19 @@ function actualizarGrietas(concentracion) {
   $('vignette-peligro').classList.toggle('activo', severidad > 1);
 }
 
+function actualizarRellenoSlider(input) {
+  const min = parseFloat(input.min);
+  const max = parseFloat(input.max);
+  const val = parseFloat(input.value);
+  const pct = ((val - min) / (max - min)) * 100;
+  input.style.setProperty('--value', pct + '%');
+}
+
 function actualizarSim() {
   const p = leerParametros();
   actualizarEtiquetas(p);
+
+  document.querySelectorAll('input[type="range"]').forEach(actualizarRellenoSlider);
 
   const res = Sim.simulate(p);
 
